@@ -1,0 +1,29 @@
+# Python specific
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# IDE and editor files
+.idea/
+.vscode/
+
+# Data and output
+data/output/*
+data/output/.*
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+
+# Dependencies (if using virtualenv)
+venv/
+env/
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# Environment variables
+.env
