@@ -6,7 +6,8 @@ from typing import Dict, List, Tuple
 from pptx import Presentation
 from pptx.text.text import _Paragraph
 
-from src.__iinit__ import template_dir, output_dir
+from src import template_dir, output_dir
+
 
 class TemplateRenderer:
     """处理Jinja2-like模板渲染和位置计算。"""
@@ -87,21 +88,23 @@ class PptProcessor:
         for i, new_text in enumerate(new_texts):
             text_position_list[i]['run'].text = new_text
     
-    def _copy_non_placeholder(self, new_texts: List[str], text_position_list: List[Dict], all_text: str, start: int, end: int) -> None:
+    @staticmethod
+    def _copy_non_placeholder(new_texts: List[str], text_position_list: List[Dict], all_text: str, start: int, end: int) -> None:
         """复制非占位符文本到新文本列表。"""
         current = start
         while current < end:
             for idx, pos in enumerate(text_position_list):
                 run_start = pos['start']
                 run_end = run_start + pos['len']
-                if run_end > current and run_start <= current:
+                if run_end > current >= run_start:
                     rel_pos = current - run_start
                     remaining = min(end - current, run_end - current)
                     new_texts[idx] += all_text[current:current + remaining]
                     current += remaining
                     break
     
-    def _allocate_rendered_value(self, new_texts: List[str], text_position_list: List[Dict], ph: Dict, orig_start: int, orig_end: int) -> None:
+    @staticmethod
+    def _allocate_rendered_value(new_texts: List[str], text_position_list: List[Dict], ph: Dict, orig_start: int, orig_end: int) -> None:
         """按比例分配渲染值到覆盖的run。"""
         covered_runs = []
         total_covered_len = 0
